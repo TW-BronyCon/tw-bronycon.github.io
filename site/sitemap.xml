@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap><loc>https://twbronycon.org/2026/sitemap.xml</loc></sitemap>
-  <sitemap><loc>https://twbronycon.org/2027/sitemap.xml</loc></sitemap>
+  <!-- Update each lastmod when that yearly sitemap changes. -->
+  <sitemap>
+    <loc>https://twbronycon.org/2026/sitemap.xml</loc>
+    <lastmod>2026-11-23T15:52:20Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://twbronycon.org/2027/sitemap.xml</loc>
+    <lastmod>2026-11-23T15:52:12Z</lastmod>
+  </sitemap>
 </sitemapindex>
