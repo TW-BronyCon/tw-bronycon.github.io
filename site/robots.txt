@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://twbronycon.org/sitemap.xml
+Sitemap: https://twbronycon.org/2026/sitemap.xml
+Sitemap: https://twbronycon.org/2027/sitemap.xml
