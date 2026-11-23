@@ -1,0 +1,76 @@
+name: Deploy TWBC to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    env:
+      NUXT_I18N_BASE_URL: https://twbronycon.org
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/configure-pages@v6
+      # Update these pins when releasing a year site. Cloudflare previews are independent.
+      - uses: actions/checkout@v7
+        with:
+          repository: TW-BronyCon/2026-ManeSite
+          ref: 32f125ecd5a599183007ff05e556bd2d1129de8e
+          path: sources/2026
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          repository: TW-BronyCon/2027-Manesite
+          ref: 05bfaf9f864ebb9ef9e2457f2806d0ec4078480f
+          path: sources/2027
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: sources/2026/.node-version
+          cache: npm
+          cache-dependency-path: sources/2026/package-lock.json
+      - run: npm ci && npm run generate
+        working-directory: sources/2026
+        env:
+          NUXT_APP_BASE_URL: /2026/
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: sources/2027/.node-version
+          cache: npm
+          cache-dependency-path: sources/2027/package-lock.json
+      - run: npm ci && npm run build
+        working-directory: sources/2027
+        env:
+          NUXT_APP_BASE_URL: /2027/
+      - name: Assemble root and year sites
+        run: bash scripts/assemble.sh sources/2026/.output/public sources/2027/.output/public "$RUNNER_TEMP/twbc-pages"
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ${{ runner.temp }}/twbc-pages
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deploy
