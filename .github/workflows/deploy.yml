@@ -25,11 +25,12 @@ jobs:
         with:
           persist-credentials: false
       - uses: actions/configure-pages@v6
+        id: pages
       # Update these pins when releasing a year site. Cloudflare previews are independent.
       - uses: actions/checkout@v7
         with:
           repository: TW-BronyCon/2026-ManeSite
-          ref: 32f125ecd5a599183007ff05e556bd2d1129de8e
+          ref: c33a0064133be480bde166cb40b4d4eb65b29849
           path: sources/2026
           persist-credentials: false
       - uses: actions/checkout@v7
@@ -46,7 +47,7 @@ jobs:
       - run: npm ci && npm run generate
         working-directory: sources/2026
         env:
-          NUXT_APP_BASE_URL: /2026/
+          NUXT_APP_BASE_URL: ${{ steps.pages.outputs.base_path }}/2026/
       - uses: actions/setup-node@v7
         with:
           node-version-file: sources/2027/.node-version
@@ -55,7 +56,7 @@ jobs:
       - run: npm ci && npm run build
         working-directory: sources/2027
         env:
-          NUXT_APP_BASE_URL: /2027/
+          NUXT_APP_BASE_URL: ${{ steps.pages.outputs.base_path }}/2027/
       - name: Assemble root and year sites
         run: bash scripts/assemble.sh sources/2026/.output/public sources/2027/.output/public "$RUNNER_TEMP/twbc-pages"
       - uses: actions/upload-pages-artifact@v5
