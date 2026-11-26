@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=./2027/" />
     <title>Taiwan BronyCon</title>
     <style>
       :root {
@@ -20,6 +19,18 @@
     </script>
   </head>
   <body>
-    <p> Redirecting to the homepage...</p>
+    <p>Page not found. Visit the <a id="homepage" href="/2027/">Taiwan BronyCon 2027 homepage</a>.</p>
+    <script>
+      const homepage = document.getElementById('homepage');
+      const { pathname } = window.location;
+      if (pathname === '/en' || pathname.startsWith('/en/') ||
+          pathname === '/2027/en' || pathname === '/2027/en/') {
+        homepage.href = '/2027/en/';
+      }
+      // If the destination itself returns a 404, leave the link visible instead of looping.
+      if (pathname !== homepage.pathname && `${pathname}/` !== homepage.pathname) {
+        window.location.replace(homepage.href);
+      }
+    </script>
   </body>
 </html>
