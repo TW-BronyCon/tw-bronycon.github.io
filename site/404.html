@@ -2,6 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      const { pathname } = window.location;
+      const english = pathname === '/en' || pathname.startsWith('/en/') ||
+        pathname === '/2027/en' || pathname === '/2027/en/';
+      const destination = english ? '/2027/en/' : '/2027/';
+
+      // If the destination itself returns a 404, show the link rather than looping.
+      if (pathname !== destination && `${pathname}/` !== destination) {
+        document.documentElement.hidden = true;
+        window.location.replace(destination);
+      } else if (english) {
+        document.addEventListener('DOMContentLoaded', () => {
+          document.getElementById('homepage').href = destination;
+        });
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Taiwan BronyCon</title>
     <style>
@@ -20,17 +36,5 @@
   </head>
   <body>
     <p>Page not found. Visit the <a id="homepage" href="/2027/">Taiwan BronyCon 2027 homepage</a>.</p>
-    <script>
-      const homepage = document.getElementById('homepage');
-      const { pathname } = window.location;
-      if (pathname === '/en' || pathname.startsWith('/en/') ||
-          pathname === '/2027/en' || pathname === '/2027/en/') {
-        homepage.href = '/2027/en/';
-      }
-      // If the destination itself returns a 404, leave the link visible instead of looping.
-      if (pathname !== homepage.pathname && `${pathname}/` !== homepage.pathname) {
-        window.location.replace(homepage.href);
-      }
-    </script>
   </body>
 </html>
